@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZSAPLINK_GUI" VERSION="1" LANGU="E" DESCRIPT="SAPlink GUI class" UUID="DFE3ECE0530EF2F185D0F0DEF1017879" CATEGORY="00" EXPOSURE="1" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" CHGDANYON="00000000" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <types CLSNAME="ZSAPLINK_GUI" CMPNAME="TS_OBJECT_TABLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="14 " SRCCOLUMN2="28 " R3RELEASE="701" TYPESRC_LENG="159 " TYPESRC="begin of ts_object_Table,
+         classname type string,
+         object type ko100-object,
+         text type ko100-text,
+       end of ts_object_Table
+"/>
+ <types CLSNAME="ZSAPLINK_GUI" CMPNAME="TT_OBJECT_TABLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" TYPTYPE="4" SRCROW1="16 " SRCCOLUMN1="4 " SRCROW2="16 " SRCCOLUMN2="57 " R3RELEASE="701" TYPESRC_LENG="56 " TYPESRC="tt_object_table type standard table of ts_object_table
+"/>
+ <publicSection>class ZSAPLINK_GUI definition
+  public
+  create protected .
+
+*&quot;* public components of class ZSAPLINK_GUI
+*&quot;* do not include other source files here!!!
+public section.
+
+  types:
+    begin of ts_object_Table,
+         classname type string,
+         object type ko100-object,
+         text type ko100-text,
+       end of ts_object_Table .
+  types:
+    tt_object_table type standard table of ts_object_table .
+
+  class-data INSTANCE type ref to ZSAPLINK_GUI read-only .
+  data IS_SLINKEE type CHAR1 read-only .
+  data OBJECT_TABLE type TT_OBJECT_TABLE read-only .
+
+  class-methods CLASS_CONSTRUCTOR .
+  methods INITIALIZE .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZSAPLINK_GUI
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZSAPLINK_GUI
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <textPool/>
+ <attribute CLSNAME="ZSAPLINK_GUI" CMPNAME="INSTANCE" VERSION="1" LANGU="E" DESCRIPT="SAPlink GUI class" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="1" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZSAPLINK_GUI" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_GUI" CMPNAME="IS_SLINKEE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000" ATTDECLTYP="0" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_GUI" CMPNAME="OBJECT_TABLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="0" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TT_OBJECT_TABLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZSAPLINK_GUI" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="2" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+  <source>method CLASS_CONSTRUCTOR.
+*/---------------------------------------------------------------------\
+*|   This file is part of SAPlink.                                     |
+*|                                                                     |
+*|   SAPlink is free software; you can redistribute it and/or modify   |
+*|   it under the terms of the GNU General Public License as published |
+*|   by the Free Software Foundation; either version 2 of the License, |
+*|   or (at your option) any later version.                            |
+*|                                                                     |
+*|   SAPlink is distributed in the hope that it will be useful,        |
+*|   but WITHOUT ANY WARRANTY; without even the implied warranty of    |
+*|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     |
+*|   GNU General Public License for more details.                      |
+*|                                                                     |
+*|   You should have received a copy of the GNU General Public License |
+*|   along with SAPlink; if not, write to the                          |
+*|   Free Software Foundation, Inc.,                                   |
+*|   51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA          |
+*\---------------------------------------------------------------------/
+  create object instance.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZSAPLINK_GUI" CMPNAME="INITIALIZE" VERSION="1" LANGU="E" DESCRIPT="Initialize" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+  <source>METHOD initialize.
+  zsaplink=&gt;getplugins( CHANGING objecttable = object_table ).
+
+  IMPORT p1 = is_slinkee FROM MEMORY ID &apos;ISSLNK&apos;.
+ENDMETHOD.</source>
+ </method>
+</CLAS>

@@ -5190,9 +5190,19 @@ public section.
   <protectedSection>*&quot;* protected components of class ZCL_EVP_XML_UTILS
 *&quot;* do not include other source files here!!!
 protected section.</protectedSection>
-  <privateSection>*&quot;* private components of class ZCL_EVP_XML_UTILS
+  <privateSection>*&quot;* private components of class ZSAPLINK_UTILS
 *&quot;* do not include other source files here!!!
-private section.</privateSection>
+private section.
+
+  class ZCX_SAPLINK definition load .
+  methods RAISE_EXCEPTION
+    importing
+      !IV_TEXTID type SOTR_CONC optional
+      !IV_MSG type CSEQUENCE optional
+      !IT_ERROR_MESSAGES type ZCX_SAPLINK=&gt;TT_ERROR_MESSAGE optional
+      !IV_SUBRC type SYSUBRC optional
+    raising
+      ZCX_SAPLINK .</privateSection>
   <localImplementation>*&quot;* local class implementation for public class
 *&quot;* use this source file for the implementation part of
 *&quot;* local helper classes</localImplementation>
@@ -5298,7 +5308,16 @@ CLASS Abap_Unit_Testclass IMPLEMENTATION.
 
 
 ENDCLASS.       &quot;Abap_Unit_Testclass</localTestClasses>
-  <textPool/>
+  <textPool>
+   <language SPRAS="E">
+    <textElement ID="I" KEY="T01" ENTRY="No file name specified" LENGTH="22 "/>
+    <textElement ID="I" KEY="T02" ENTRY="GUI_UPLOAD failed" LENGTH="17 "/>
+    <textElement ID="I" KEY="T03" ENTRY="XML parser errors" LENGTH="17 "/>
+    <textElement ID="I" KEY="T04" ENTRY="XML Document not bound" LENGTH="22 "/>
+    <textElement ID="I" KEY="T05" ENTRY="XML Renderer failed" LENGTH="19 "/>
+    <textElement ID="I" KEY="T06" ENTRY="GUI_DOWNLOAD failed" LENGTH="19 "/>
+   </language>
+  </textPool>
   <typeUsage CLSNAME="ZSAPLINK_UTILS" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
   <forwardDeclaration>ABAP</forwardDeclaration>
   <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="CHAR_SET_ISO_8859_1" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;ISO-8859-1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
@@ -5315,6 +5334,24 @@ ENDCLASS.       &quot;Abap_Unit_Testclass</localTestClasses>
    <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="RO_IXML_DOC" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
    <exception CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="ZCX_SAPLINK" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000"/>
    <source>method LOAD_IXML_DOC_FROM_FILE.
+*/---------------------------------------------------------------------\
+*|   This file is part of SAPlink.                                     |
+*|                                                                     |
+*|   SAPlink is free software; you can redistribute it and/or modify   |
+*|   it under the terms of the GNU General Public License as published |
+*|   by the Free Software Foundation; either version 2 of the License, |
+*|   or (at your option) any later version.                            |
+*|                                                                     |
+*|   SAPlink is distributed in the hope that it will be useful,        |
+*|   but WITHOUT ANY WARRANTY; without even the implied warranty of    |
+*|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     |
+*|   GNU General Public License for more details.                      |
+*|                                                                     |
+*|   You should have received a copy of the GNU General Public License |
+*|   along with SAPlink; if not, write to the                          |
+*|   Free Software Foundation, Inc.,                                   |
+*|   51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA          |
+*\---------------------------------------------------------------------/
   data lo_ixml_stream_factory type ref to if_ixml_stream_factory.
   data lo_input_stream type ref to if_ixml_istream.
   data lo_ixml type ref to if_ixml.
@@ -5332,10 +5369,10 @@ ENDCLASS.       &quot;Abap_Unit_Testclass</localTestClasses>
   data lt_error_message type zcx_saplink=&gt;tt_error_message.
 
   if iv_file_name is initial.
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;No file name specified&apos;.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;No file name specified&apos;(T01)
+    ).
   endif.
 
   call method cl_gui_frontend_services=&gt;gui_upload
@@ -5370,11 +5407,11 @@ ENDCLASS.       &quot;Abap_Unit_Testclass</localTestClasses>
 
   lv_rc = sy-subrc.
   if lv_rc &lt;&gt; 0.
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;GUI_UPLOAD failed&apos;
-      subrc = lv_rc.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;GUI_UPLOAD failed&apos;(T02)
+      iv_subrc = lv_rc
+    ).
   endif.
 
   lo_ixml = cl_ixml=&gt;create( ).
@@ -5438,13 +5475,46 @@ ENDCLASS.       &quot;Abap_Unit_Testclass</localTestClasses>
       append ls_error_message to lt_error_message.
     enddo.
 
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;XML parser errors&apos;
-      subrc = lv_rc
-      error_messages = lt_error_message.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;XML parser errors&apos;(T03)
+      iv_subrc = lv_rc
+      it_error_messages = lt_error_message
+    ).
   endif.
+endmethod.</source>
+  </method>
+  <method CLSNAME="ZSAPLINK_UTILS" CMPNAME="RAISE_EXCEPTION" VERSION="1" LANGU="E" DESCRIPT="Raises ZCX_SAPLINK exception" EXPOSURE="0" STATE="1" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" R3RELEASE="701" BCMTDCAT="00" BCMTDSYN="0">
+   <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="RAISE_EXCEPTION" SCONAME="IV_TEXTID" VERSION="1" LANGU="E" DESCRIPT="Text ID" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SOTR_CONC" PAROPTIONL="X"/>
+   <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="RAISE_EXCEPTION" SCONAME="IV_MSG" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="CSEQUENCE" PAROPTIONL="X"/>
+   <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="RAISE_EXCEPTION" SCONAME="IT_ERROR_MESSAGES" VERSION="1" LANGU="E" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="ZCX_SAPLINK=&gt;TT_ERROR_MESSAGE" PAROPTIONL="X"/>
+   <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="RAISE_EXCEPTION" SCONAME="IV_SUBRC" VERSION="1" LANGU="E" DESCRIPT="Return Value of ABAP Statements" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="SYSUBRC" PAROPTIONL="X"/>
+   <exception CLSNAME="ZSAPLINK_UTILS" CMPNAME="RAISE_EXCEPTION" SCONAME="ZCX_SAPLINK" VERSION="1" LANGU="E" DESCRIPT="SAPlink exception class" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000"/>
+   <source>method RAISE_EXCEPTION.
+*/---------------------------------------------------------------------\
+*|   This file is part of SAPlink.                                     |
+*|                                                                     |
+*|   SAPlink is free software; you can redistribute it and/or modify   |
+*|   it under the terms of the GNU General Public License as published |
+*|   by the Free Software Foundation; either version 2 of the License, |
+*|   or (at your option) any later version.                            |
+*|                                                                     |
+*|   SAPlink is distributed in the hope that it will be useful,        |
+*|   but WITHOUT ANY WARRANTY; without even the implied warranty of    |
+*|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     |
+*|   GNU General Public License for more details.                      |
+*|                                                                     |
+*|   You should have received a copy of the GNU General Public License |
+*|   along with SAPlink; if not, write to the                          |
+*|   Free Software Foundation, Inc.,                                   |
+*|   51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA          |
+*\---------------------------------------------------------------------/
+  raise exception type zcx_saplink
+  exporting
+    textid = iv_textid
+    msg = iv_msg
+    subrc = iv_subrc
+    error_messages = it_error_messages.
 endmethod.</source>
   </method>
   <method CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" VERSION="1" LANGU="E" DESCRIPT="Saves iXML document to a file" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
@@ -5456,6 +5526,24 @@ endmethod.</source>
    <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="RV_BYTES_WRITTEN" VERSION="1" LANGU="E" DESCRIPT="Number of bytes written" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
    <exception CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="ZCX_SAPLINK" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000"/>
    <source>method SAVE_IXML_DOC_TO_FILE.
+*/---------------------------------------------------------------------\
+*|   This file is part of SAPlink.                                     |
+*|                                                                     |
+*|   SAPlink is free software; you can redistribute it and/or modify   |
+*|   it under the terms of the GNU General Public License as published |
+*|   by the Free Software Foundation; either version 2 of the License, |
+*|   or (at your option) any later version.                            |
+*|                                                                     |
+*|   SAPlink is distributed in the hope that it will be useful,        |
+*|   but WITHOUT ANY WARRANTY; without even the implied warranty of    |
+*|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     |
+*|   GNU General Public License for more details.                      |
+*|                                                                     |
+*|   You should have received a copy of the GNU General Public License |
+*|   along with SAPlink; if not, write to the                          |
+*|   Free Software Foundation, Inc.,                                   |
+*|   51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA          |
+*\---------------------------------------------------------------------/
   data lo_ixml type ref to if_ixml.
   data lo_ixml_stream_factory type ref to if_ixml_stream_factory.
   data lo_output_stream type ref to if_ixml_ostream.
@@ -5466,17 +5554,17 @@ endmethod.</source>
   data lv_size type i.
 
   if io_ixml_doc is not bound.
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;XML Document not bound&apos;.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;XML Document not bound&apos;(T04)
+    ).
   endif.
 
   if iv_file_name is initial.
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;No file name specified&apos;.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;No file name specified&apos;(T01)
+    ).
   endif.
 
   lo_ixml = cl_ixml=&gt;create( ).
@@ -5505,11 +5593,11 @@ endmethod.</source>
   lo_output_stream-&gt;close( ).
 
   if lv_rc &lt;&gt; 0.
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;Renderer failed&apos;
-      subrc = lv_rc.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;XML Renderer failed&apos;(T05)
+      iv_subrc = lv_rc
+    ).
   endif.
 
   call method cl_gui_frontend_services=&gt;gui_download
@@ -5549,18 +5637,99 @@ endmethod.</source>
   lv_rc = sy-subrc.
 
   if lv_rc &lt;&gt; 0.
-    raise exception type zcx_saplink
-    exporting
-      textid = zcx_saplink=&gt;error_message
-      msg = &apos;GUI_DOWNLOAD failed&apos;
-      subrc = lv_rc.
+    raise_exception(
+      iv_textid = zcx_saplink=&gt;error_message
+      iv_msg = &apos;GUI_DOWNLOAD failed&apos;(T06)
+      iv_subrc = lv_rc
+    ).
   endif.
 
   rv_bytes_written = lv_size.
 endmethod.</source>
   </method>
  </CLAS>
- <PROG NAME="ZSAPLINK" VARCL="X" DBAPL="S" DBNA="D$" SUBC="1" APPL="S" CNAM="EWH" CDAT="20060903" UNAM="BCUSER" UDAT="20100810" VERN="000186" RMAND="321" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="014532" IDATE="20100810" ITIME="222129" LDBNAME="D$S" UCCHECK="X">
+ <CLAS CLSNAME="ZSAPLINK_GUI" VERSION="1" LANGU="E" DESCRIPT="SAPlink GUI class" UUID="DFE3ECE0530EF2F185D0F0DEF1017879" CATEGORY="00" EXPOSURE="1" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" CHGDANYON="00000000" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+  <types CLSNAME="ZSAPLINK_GUI" CMPNAME="TS_OBJECT_TABLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" TYPTYPE="4" SRCROW1="10 " SRCCOLUMN1="4 " SRCROW2="14 " SRCCOLUMN2="28 " R3RELEASE="701" TYPESRC_LENG="159 " TYPESRC="begin of ts_object_Table,
+         classname type string,
+         object type ko100-object,
+         text type ko100-text,
+       end of ts_object_Table
+"/>
+  <types CLSNAME="ZSAPLINK_GUI" CMPNAME="TT_OBJECT_TABLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" TYPTYPE="4" SRCROW1="16 " SRCCOLUMN1="4 " SRCROW2="16 " SRCCOLUMN2="57 " R3RELEASE="701" TYPESRC_LENG="56 " TYPESRC="tt_object_table type standard table of ts_object_table
+"/>
+  <publicSection>class ZSAPLINK_GUI definition
+  public
+  create protected .
+
+*&quot;* public components of class ZSAPLINK_GUI
+*&quot;* do not include other source files here!!!
+public section.
+
+  types:
+    begin of ts_object_Table,
+         classname type string,
+         object type ko100-object,
+         text type ko100-text,
+       end of ts_object_Table .
+  types:
+    tt_object_table type standard table of ts_object_table .
+
+  class-data INSTANCE type ref to ZSAPLINK_GUI read-only .
+  data IS_SLINKEE type CHAR1 read-only .
+  data OBJECT_TABLE type TT_OBJECT_TABLE read-only .
+
+  class-methods CLASS_CONSTRUCTOR .
+  methods INITIALIZE .</publicSection>
+  <protectedSection>*&quot;* protected components of class ZSAPLINK_GUI
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+  <privateSection>*&quot;* private components of class ZSAPLINK_GUI
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+  <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+  <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+  <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+  <textPool/>
+  <attribute CLSNAME="ZSAPLINK_GUI" CMPNAME="INSTANCE" VERSION="1" LANGU="E" DESCRIPT="SAPlink GUI class" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="1" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="3" TYPE="ZSAPLINK_GUI" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+  <attribute CLSNAME="ZSAPLINK_GUI" CMPNAME="IS_SLINKEE" VERSION="1" LANGU="E" DESCRIPT="Single-Character Flag" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000" ATTDECLTYP="0" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="1" TYPE="CHAR1" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+  <attribute CLSNAME="ZSAPLINK_GUI" CMPNAME="OBJECT_TABLE" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="0" ATTRDONLY="X" ATTEXPVIRT="0" TYPTYPE="1" TYPE="TT_OBJECT_TABLE" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " R3RELEASE="701" TYPESRC_LENG="0 "/>
+  <method CLSNAME="ZSAPLINK_GUI" CMPNAME="CLASS_CONSTRUCTOR" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="2" MTDDECLTYP="1" BCMTDCAT="00" BCMTDSYN="0">
+   <source>method CLASS_CONSTRUCTOR.
+*/---------------------------------------------------------------------\
+*|   This file is part of SAPlink.                                     |
+*|                                                                     |
+*|   SAPlink is free software; you can redistribute it and/or modify   |
+*|   it under the terms of the GNU General Public License as published |
+*|   by the Free Software Foundation; either version 2 of the License, |
+*|   or (at your option) any later version.                            |
+*|                                                                     |
+*|   SAPlink is distributed in the hope that it will be useful,        |
+*|   but WITHOUT ANY WARRANTY; without even the implied warranty of    |
+*|   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     |
+*|   GNU General Public License for more details.                      |
+*|                                                                     |
+*|   You should have received a copy of the GNU General Public License |
+*|   along with SAPlink; if not, write to the                          |
+*|   Free Software Foundation, Inc.,                                   |
+*|   51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA          |
+*\---------------------------------------------------------------------/
+  create object instance.
+endmethod.</source>
+  </method>
+  <method CLSNAME="ZSAPLINK_GUI" CMPNAME="INITIALIZE" VERSION="1" LANGU="E" DESCRIPT="Initialize" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="0" MTDDECLTYP="0" BCMTDCAT="00" BCMTDSYN="0">
+   <source>METHOD initialize.
+  zsaplink=&gt;getplugins( CHANGING objecttable = object_table ).
+
+  IMPORT p1 = is_slinkee FROM MEMORY ID &apos;ISSLNK&apos;.
+ENDMETHOD.</source>
+  </method>
+ </CLAS>
+ <PROG NAME="ZSAPLINK" VARCL="X" DBAPL="S" DBNA="D$" SUBC="1" APPL="S" CNAM="EWH" CDAT="20060903" UNAM="BCUSER" UDAT="20101030" VERN="000187" RMAND="321" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="023239" IDATE="20101030" ITIME="023239" LDBNAME="D$S" UCCHECK="X">
   <textPool>
    <language SPRAS="D">
     <textElement ID="I" KEY="NGA" ENTRY="Objekt zum Nugget hinzufügen" LENGTH="28 "/>
@@ -6084,12 +6253,11 @@ SELECTION-SCREEN END OF SCREEN 120.
 
 */----------------------selection screen events-----------------------\
 initialization.
-  call method zsaplink=&gt;getplugins(
-    changing objectTable = objectTable ).
+  zsaplink_gui=&gt;instance-&gt;initialize( ).
 
-  IMPORT isSlinkee FROM MEMORY ID &apos;ISSLNK&apos;.
+  objectTable = zsaplink_gui=&gt;instance-&gt;object_table.
 
-  if isSlinkee = &apos;X&apos;.
+  if zsaplink_gui=&gt;instance-&gt;is_slinkee = &apos;X&apos;.
     tabb-dynnr = 110.
     tabb-activetab = &apos;OBJ&apos;.
   else.
@@ -7303,7 +7471,7 @@ form addObjectstoNugget .
 endform.                    &quot; addObjectstoNugget
 *  &lt;--rrq: enhancement 3 &amp; 42</source>
  </PROG>
- <PROG NAME="Z_ZAKE_SVN_SAPLINK" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101030" VERN="000019" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="014532" IDATE="20101030" ITIME="013447" UCCHECK="X">
+ <PROG NAME="Z_ZAKE_SVN_SAPLINK" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101030" VERN="000020" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="021427" IDATE="20101030" ITIME="021427" UCCHECK="X">
   <textPool>
    <language SPRAS="E">
     <textElement ID="R" ENTRY="SAPlink Plus ZAKE Interface" LENGTH="27 "/>
@@ -7408,6 +7576,9 @@ START-OF-SELECTION.
       APPEND object TO objects.
       object-object   = &apos;CLAS&apos;.
       object-obj_name = &apos;ZSAPLINK_UTILS&apos;.
+      APPEND object TO objects.
+      object-object   = &apos;CLAS&apos;.
+      object-obj_name = &apos;ZSAPLINK_GUI&apos;.
       APPEND object TO objects.
 
       &quot; Programs
