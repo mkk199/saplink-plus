@@ -6867,10 +6867,23 @@ form addObjectstoNugget .
 endform.                    &quot; addObjectstoNugget
 *  &lt;--rrq: enhancement 3 &amp; 42</source>
  </PROG>
- <PROG NAME="Z_ZAKE_SVN_SAPLINK" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101030" VERN="000012" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="010646" IDATE="20101030" ITIME="010646" UCCHECK="X">
+ <PROG NAME="Z_ZAKE_SVN_SAPLINK" VARCL="X" SUBC="1" CNAM="BCUSER" CDAT="20101030" UNAM="BCUSER" UDAT="20101030" VERN="000018" RSTAT="T" RMAND="000" RLOAD="E" FIXPT="X" SDATE="20101030" STIME="012014" IDATE="20101030" ITIME="012014" UCCHECK="X">
   <textPool>
    <language SPRAS="E">
-    <textElement ID="R" ENTRY="ZAKE SVN Test" LENGTH="13 "/>
+    <textElement ID="R" ENTRY="SAPlink Plus ZAKE Interface" LENGTH="27 "/>
+    <textElement ID="S" KEY="CHECKIN" ENTRY="        Check In" LENGTH="16 "/>
+    <textElement ID="S" KEY="CHECKOUT" ENTRY="        Check Out" LENGTH="17 "/>
+    <textElement ID="S" KEY="COMMENT" ENTRY="        Comment" LENGTH="15 "/>
+    <textElement ID="S" KEY="LOCLPATH" ENTRY="        Local Path" LENGTH="18 "/>
+    <textElement ID="S" KEY="NUGGETNA" ENTRY="        Nugget Name" LENGTH="19 "/>
+    <textElement ID="S" KEY="PASSWORD" ENTRY="        Password" LENGTH="16 "/>
+    <textElement ID="S" KEY="REVISION" ENTRY="        Revision" LENGTH="16 "/>
+    <textElement ID="S" KEY="SVN" ENTRY="        svn" LENGTH="11 "/>
+    <textElement ID="S" KEY="SVNPATH" ENTRY="        svn path" LENGTH="16 "/>
+    <textElement ID="S" KEY="TESTRUN" ENTRY="        Test Run" LENGTH="16 "/>
+    <textElement ID="S" KEY="TORTOISE" ENTRY="        Tortoise" LENGTH="16 "/>
+    <textElement ID="S" KEY="UPDATE" ENTRY="        Update" LENGTH="14 "/>
+    <textElement ID="S" KEY="USERNAME" ENTRY="        User Name" LENGTH="17 "/>
    </language>
   </textPool>
   <source>************************************************************************
@@ -6882,8 +6895,8 @@ REPORT  z_zake_svn_saplink.
 CONSTANTS cl_svn TYPE seoclsname VALUE &apos;ZCL_ZAKE_SVN&apos;.
 CONSTANTS cl_tortoise_svn TYPE seoclsname VALUE &apos;ZCL_ZAKE_TORTOISE_SVN&apos;.
 
-DATA package TYPE devclass.
-DATA lt_packages TYPE TABLE OF devclass.
+&quot;DATA package TYPE devclass.
+&quot;DATA lt_packages TYPE TABLE OF devclass.
 DATA zake    TYPE REF TO zake.
 DATA objects TYPE scts_tadir.
 DATA object  LIKE LINE OF objects.
@@ -6897,7 +6910,7 @@ DATA username_str TYPE string.
 DATA password_str TYPE string.
 DATA class TYPE seoclsname.
 DATA files TYPE string_table.
-DATA file LIKE LINE OF files.
+&quot;DATA file LIKE LINE OF files.
 
 DATA: ex TYPE REF TO zcx_saplink,
       message TYPE string.
@@ -6917,9 +6930,9 @@ SELECTION-SCREEN END OF BLOCK b.
 
 SELECTION-SCREEN BEGIN OF BLOCK c WITH FRAME TITLE c.
 PARAMETERS:
-  loclpath TYPE char512 DEFAULT &apos;C:/Users/edward/projects/SDN/saplink-plus&apos; LOWER CASE OBLIGATORY,
-  nuggetna TYPE char512 DEFAULT &apos;C:/Users/edward/projects/SDN/saplink-plus/build/saplink.nugg&apos; LOWER CASE OBLIGATORY,
-  svnpath  TYPE char512 DEFAULT &apos;https://saplink-plus.googlecode.com/svn/trunk/&apos; LOWER CASE OBLIGATORY,
+  loclpath TYPE char512 DEFAULT &apos;C:/Users/edward/projects/SDN/saplink-plus&apos; LOWER CASE OBLIGATORY, &quot;#EC NOTEXT
+  nuggetna TYPE char512 DEFAULT &apos;C:/Users/edward/projects/SDN/saplink-plus/build/saplink.nugg&apos; LOWER CASE OBLIGATORY, &quot;#EC NOTEXT
+  svnpath  TYPE char512 DEFAULT &apos;https://saplink-plus.googlecode.com/svn/trunk/&apos; LOWER CASE OBLIGATORY, &quot;#EC NOTEXT
   revision TYPE i,
   comment  TYPE char512 DEFAULT &apos;&apos; LOWER CASE,
 ** Instead of providing the Username &amp; Password in clear text here
@@ -6930,9 +6943,9 @@ PARAMETERS:
 SELECTION-SCREEN END OF BLOCK c.
 
 INITIALIZATION.
-  a = &apos;Action&apos;.
-  b = &apos;Version Controll Program&apos;.
-  c = &apos;Parameters&apos;.
+  a = &apos;Action&apos;. &quot;#EC NOTEXT
+  b = &apos;Version Controll Program&apos;. &quot;#EC NOTEXT
+  c = &apos;Parameters&apos;. &quot;#EC NOTEXT
 
 START-OF-SELECTION.
 * Loop around the Packages which are returned for the Select Options select
@@ -7016,7 +7029,7 @@ START-OF-SELECTION.
       ENDIF.
     CATCH zcx_saplink INTO ex.
       message = ex-&gt;get_text( ).
-      WRITE: / &apos;An Error occured: &apos;, message.
+      WRITE: / &apos;An Error occured: &apos;, message. &quot;#EC NOTEXT
   ENDTRY.</source>
  </PROG>
 </nugget>
