@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CLAS CLSNAME="ZSAPLINK_UTILS" VERSION="1" LANGU="E" DESCRIPT="SAPlink Utils" UUID="DFE3E74E9883BEF185D0F0DEF1017879" CATEGORY="00" EXPOSURE="2" STATE="1" RELEASE="0" AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" CHGDANYON="00000000" CLSFINAL="X" CLSCCINCL="X" FIXPT="X" UNICODE="X" R3RELEASE="701" CLSBCCAT="00" WITH_UNIT_TESTS="X" DURATION_TYPE="0 " RISK_LEVEL="0 ">
+ <publicSection>class ZSAPLINK_UTILS definition
+  public
+  final
+  create public .
+
+*&quot;* public components of class ZSAPLINK_UTILS
+*&quot;* do not include other source files here!!!
+public section.
+
+  constants CHAR_SET_US_ASCII type STRING value &apos;US-ASCII&apos;. &quot;#EC NOTEXT
+  constants CHAR_SET_UTF_16 type STRING value &apos;UTF-16&apos;. &quot;#EC NOTEXT
+  constants CHAR_SET_UTF_8 type STRING value &apos;UTF-8&apos;. &quot;#EC NOTEXT
+  constants CHAR_SET_ISO_8859_1 type STRING value &apos;ISO-8859-1&apos;. &quot;#EC NOTEXT
+  constants CHAR_SET_WINDOWS_1251 type STRING value &apos;WINDOWS-1251&apos;. &quot;#EC NOTEXT
+  constants PRESERVE_SPACE_ELEMENT type STRING value &apos;preserve&apos;. &quot;#EC NOTEXT
+  constants STRIP_SPACE_ELEMENT type STRING value &apos;strip&apos;. &quot;#EC NOTEXT
+
+  methods LOAD_IXML_DOC_FROM_FILE
+    importing
+      value(IV_FILE_NAME) type STRING
+      !IV_SET_VALIDATING type I optional
+      !IV_SPACE_ELEMENT type STRING default &apos;&apos;
+    returning
+      value(RO_IXML_DOC) type ref to IF_IXML_DOCUMENT
+    raising
+      ZCX_SAPLINK .
+  type-pools ABAP .
+  methods SAVE_IXML_DOC_TO_FILE
+    importing
+      !IO_IXML_DOC type ref to IF_IXML_DOCUMENT
+      value(IV_FILE_NAME) type STRING
+      value(IV_CHARACTER_SET) type STRING default CHAR_SET_UTF_16
+      value(IV_BYTE_ORDER) type I default IF_IXML_ENCODING=&gt;CO_NONE
+      value(IV_PRETTY_PRINT) type ABAP_BOOL default &apos;X&apos;
+    preferred parameter IV_BYTE_ORDER
+    returning
+      value(RV_BYTES_WRITTEN) type I
+    raising
+      ZCX_SAPLINK .</publicSection>
+ <protectedSection>*&quot;* protected components of class ZCL_EVP_XML_UTILS
+*&quot;* do not include other source files here!!!
+protected section.</protectedSection>
+ <privateSection>*&quot;* private components of class ZCL_EVP_XML_UTILS
+*&quot;* do not include other source files here!!!
+private section.</privateSection>
+ <localImplementation>*&quot;* local class implementation for public class
+*&quot;* use this source file for the implementation part of
+*&quot;* local helper classes</localImplementation>
+ <localTypes>*&quot;* use this source file for any type declarations (class
+*&quot;* definitions, interfaces or data types) you need for method
+*&quot;* implementation or private method&apos;s signature</localTypes>
+ <localMacros>*&quot;* use this source file for any macro definitions you need
+*&quot;* in the implementation part of the class</localMacros>
+ <localTestClasses>* ----------------------------------------------------------------------
+CLASS Abap_Unit_Testclass DEFINITION FOR TESTING final  &quot;#AU Duration Medium
+  &quot;#AU Risk_Level Harmless
+.
+* ----------------------------------------------------------------------
+* ================
+  PRIVATE SECTION.
+* ================
+    DATA:
+      m_ref TYPE REF TO ZSAPLINK_Utils.        &quot;#EC NOTEXT
+    data go_err type ref to zcx_saplink.
+    data gv_txt type string.
+
+    METHODS: Setup.
+    METHODS: Teardown.
+    METHODS: Load_Ixml_Doc_From_File FOR TESTING.
+    METHODS: Save_Ixml_Doc_To_File FOR TESTING.
+ENDCLASS.       &quot;Abap_Unit_Testclass
+* ----------------------------------------------------------------------
+CLASS Abap_Unit_Testclass IMPLEMENTATION.
+* ----------------------------------------------------------------------
+
+* ----------------------------------------------------------------------
+  METHOD Setup.
+* ----------------------------------------------------------------------
+
+    CREATE OBJECT m_ref.
+  ENDMETHOD.       &quot;Setup
+
+* ----------------------------------------------------------------------
+  METHOD Teardown.
+* ----------------------------------------------------------------------
+
+
+  ENDMETHOD.       &quot;Teardown
+
+* ----------------------------------------------------------------------
+  METHOD Load_Ixml_Doc_From_File.
+* ----------------------------------------------------------------------
+    DATA Iv_File_Name TYPE String.
+    DATA Iv_Character_Set TYPE String.
+    DATA Iv_Byte_Order TYPE I.
+    DATA Iv_Set_Validating TYPE I.
+    DATA Ro_Ixml_Doc TYPE REF TO If_Ixml_Document.
+
+    &quot; Test #01
+    try.
+      Ro_Ixml_Doc = m_ref-&gt;Load_Ixml_Doc_From_File(
+          IV_FILE_NAME = Iv_File_Name
+*         IV_CHARACTER_SET = Iv_Character_Set
+*         IV_BYTE_ORDER = Iv_Byte_Order
+*         IV_SET_VALIDATING = Iv_Set_Validating
+      ).
+
+      cl_aunit_assert=&gt;fail( &apos;Should have failed&apos; ).
+    catch zcx_saplink into go_err.
+      gv_txt = go_err-&gt;get_text( ).
+      cl_aunit_assert=&gt;assert_equals(
+        act   = gv_txt
+        exp   = &apos;No filename is specified&apos;
+        msg   = &apos;Testing value error msg&apos;
+      ).
+    endtry.
+  ENDMETHOD.       &quot;Load_Ixml_Doc_From_File
+
+* ----------------------------------------------------------------------
+  METHOD Save_Ixml_Doc_To_File.
+* ----------------------------------------------------------------------
+    DATA Io_Ixml_Doc TYPE REF TO If_Ixml_Document.
+    DATA Iv_File_Name TYPE String.
+    DATA Iv_Character_Set TYPE String.
+    DATA Iv_Byte_Order TYPE I.
+    DATA Iv_Pretty_Print TYPE Abap_Bool.
+    DATA Rv_Bytes_Written TYPE I.
+
+    &quot; Test #01
+    try.
+      Rv_Bytes_Written = m_ref-&gt;Save_Ixml_Doc_To_File(
+          IO_IXML_DOC = Io_Ixml_Doc
+          IV_FILE_NAME = Iv_File_Name
+*         IV_CHARACTER_SET = Iv_Character_Set
+*         IV_BYTE_ORDER = Iv_Byte_Order
+*         IV_PRETTY_PRINT = Iv_Pretty_Print
+      ).
+      cl_aunit_assert=&gt;fail( &apos;Should have failed&apos; ).
+    catch zcx_saplink into go_err.
+      gv_txt = go_err-&gt;get_text( ).
+      cl_aunit_assert=&gt;assert_equals(
+        act   = gv_txt
+        exp   = &apos;XML document object is not bound&apos;
+        msg   = &apos;Testing value error msg&apos;
+      ).
+    endtry.
+  ENDMETHOD.       &quot;Save_Ixml_Doc_To_File
+
+
+ENDCLASS.       &quot;Abap_Unit_Testclass</localTestClasses>
+ <textPool/>
+ <typeUsage CLSNAME="ZSAPLINK_UTILS" TYPEGROUP="ABAP" VERSION="1" TPUTYPE="0" IMPLICIT="X"/>
+ <forwardDeclaration>ABAP</forwardDeclaration>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="CHAR_SET_ISO_8859_1" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="4 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;ISO-8859-1&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="CHAR_SET_US_ASCII" VERSION="1" LANGU="E" DESCRIPT="US-ASCII" EXPOSURE="2" STATE="1" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;US-ASCII&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="CHAR_SET_UTF_16" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="2 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;UTF-16&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="CHAR_SET_UTF_8" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="3 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;UTF-8&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="CHAR_SET_WINDOWS_1251" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="5 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;WINDOWS-1251&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="PRESERVE_SPACE_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="Preserve Space Element" EXPOSURE="2" STATE="1" EDITORDER="6 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;preserve&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <attribute CLSNAME="ZSAPLINK_UTILS" CMPNAME="STRIP_SPACE_ELEMENT" VERSION="1" LANGU="E" EXPOSURE="2" STATE="1" EDITORDER="7 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" ATTDECLTYP="2" ATTVALUE="&apos;strip&apos;" ATTEXPVIRT="0" TYPTYPE="1" TYPE="STRING" SRCROW1="0 " SRCCOLUMN1="0 " SRCROW2="0 " SRCCOLUMN2="0 " TYPESRC_LENG="0 "/>
+ <method CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" VERSION="1" LANGU="E" DESCRIPT="Loads iXML document from a file" EXPOSURE="2" STATE="1" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="IV_FILE_NAME" VERSION="1" LANGU="E" DESCRIPT="File name" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="IV_SET_VALIDATING" VERSION="1" LANGU="E" DESCRIPT="Set validating. E.g. if_ixml_parser=&gt;co_validate" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="I" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="IV_SPACE_ELEMENT" VERSION="1" LANGU="E" DESCRIPT="Preserve or strip the space element" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="1" TYPE="STRING" PARVALUE="&apos;&apos;" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="RO_IXML_DOC" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <exception CLSNAME="ZSAPLINK_UTILS" CMPNAME="LOAD_IXML_DOC_FROM_FILE" SCONAME="ZCX_SAPLINK" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000"/>
+  <source>method LOAD_IXML_DOC_FROM_FILE.
+  data lo_ixml_stream_factory type ref to if_ixml_stream_factory.
+  data lo_input_stream type ref to if_ixml_istream.
+  data lo_ixml type ref to if_ixml.
+  data lo_parser type ref to if_ixml_parser.
+  data lv_rc type i.
+  data lt_xml type dcxmllines.
+  data lv_size type i.
+  data lv_num_errors type i.
+  data lv_index type i.
+  data lo_parser_error type ref to if_ixml_parse_error.
+  data lv_line type string.
+  data lv_col type string.
+  data lv_reason type string.
+  data ls_error_message type zcx_saplink=&gt;ts_error_message.
+  data lt_error_message type zcx_saplink=&gt;tt_error_message.
+
+  if iv_file_name is initial.
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;No file name specified&apos;.
+  endif.
+
+  call method cl_gui_frontend_services=&gt;gui_upload
+    exporting
+      filename                = iv_file_name
+      filetype                = &apos;BIN&apos;
+    importing
+      filelength              = lv_size
+    changing
+      data_tab                = lt_xml
+    exceptions
+      file_open_error         = 1
+      file_read_error         = 2
+      no_batch                = 3
+      gui_refuse_filetransfer = 4
+      invalid_type            = 5
+      no_authority            = 6
+      unknown_error           = 7
+      bad_data_format         = 8
+      header_not_allowed      = 9
+      separator_not_allowed   = 10
+      header_too_long         = 11
+      unknown_dp_error        = 12
+      access_denied           = 13
+      dp_out_of_memory        = 14
+      disk_full               = 15
+      dp_timeout              = 16
+      not_supported_by_gui    = 17
+      error_no_gui            = 18
+      others                  = 19
+          .
+
+  lv_rc = sy-subrc.
+  if lv_rc &lt;&gt; 0.
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;GUI_UPLOAD failed&apos;
+      subrc = lv_rc.
+  endif.
+
+  lo_ixml = cl_ixml=&gt;create( ).
+
+  lo_ixml_stream_factory = lo_ixml-&gt;create_stream_factory( ).
+
+  lo_input_stream = lo_ixml_stream_factory-&gt;create_istream_itable(
+    table = lt_xml
+    size = lv_size
+  ).
+
+  ro_ixml_doc = lo_ixml-&gt;create_document( ).
+
+  lo_parser = lo_ixml-&gt;create_parser(
+    stream_factory = lo_ixml_stream_factory
+    istream = lo_input_stream
+    document = ro_ixml_doc
+  ).
+
+  if iv_set_validating is supplied.
+    lo_parser-&gt;set_validating( mode = if_ixml_parser=&gt;co_validate ).
+  endif.
+
+&quot; From https://cw.sdn.sap.com/cw/docs/DOC-37342
+*  A text node is preserved if any of the following apply: -
+*  The element name of the parent of the text node is in the
+*  set of whitespace preserving element names. -
+*  The text node contains at least one non-whitespace charter.
+*  As in XML, a whitespace charter is #x20, #x9, #xD or #xA. -
+*  An anchestor element of the text node has an xml:space
+*  attribute with a value of preserve, and no closer ancestor
+*  element has xml:space with a value of default.
+*  Otherwise, the text node is stripped.
+  case iv_space_element.
+    when PRESERVE_SPACE_ELEMENT.
+      lo_parser-&gt;add_preserve_space_element( ).
+    when STRIP_SPACE_ELEMENT.
+      lo_parser-&gt;add_strip_space_element( ).
+  endcase.
+
+  lv_rc = lo_parser-&gt;parse( ).
+
+  lo_input_stream-&gt;close( ).
+
+  if lv_rc &lt;&gt; 0.
+    lv_num_errors = lo_parser-&gt;num_errors( ).
+    do lv_num_errors times.
+      lv_index = sy-index - 1.
+      lo_parser_error = lo_parser-&gt;get_error( index = lv_index ).
+
+      lv_line = lo_parser_error-&gt;get_line( ).
+      lv_col = lo_parser_error-&gt;get_column( ).
+      lv_reason = lo_parser_error-&gt;get_reason( ).
+
+      concatenate
+        lv_line
+        lv_col
+        lv_reason
+      into ls_error_message-message.
+
+      append ls_error_message to lt_error_message.
+    enddo.
+
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;XML parser errors&apos;
+      subrc = lv_rc
+      error_messages = lt_error_message.
+  endif.
+endmethod.</source>
+ </method>
+ <method CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" VERSION="1" LANGU="E" DESCRIPT="Saves iXML document to a file" EXPOSURE="2" STATE="1" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" MTDTYPE="0" MTDDECLTYP="0" MTDNEWEXC="X" BCMTDCAT="00" BCMTDSYN="0">
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="IO_IXML_DOC" VERSION="1" LANGU="E" DESCRIPT="IF_IXML_DOCUMENT" CMPTYPE="1" MTDTYPE="0" EDITORDER="1 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="1" TYPTYPE="3" TYPE="IF_IXML_DOCUMENT"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="IV_FILE_NAME" VERSION="1" LANGU="E" DESCRIPT="File name" CMPTYPE="1" MTDTYPE="0" EDITORDER="2 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="IV_CHARACTER_SET" VERSION="1" LANGU="E" DESCRIPT="Character set: e.g. UTF-16" CMPTYPE="1" MTDTYPE="0" EDITORDER="3 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="STRING" PARVALUE="CHAR_SET_UTF_16" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="IV_BYTE_ORDER" VERSION="1" LANGU="E" DESCRIPT="Byte Order: e.g. little or big endian" CMPTYPE="1" MTDTYPE="0" EDITORDER="4 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="I" PARVALUE="IF_IXML_ENCODING=&gt;CO_NONE" PAROPTIONL="X" PARPREFERD="X"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="IV_PRETTY_PRINT" VERSION="1" LANGU="E" DESCRIPT="Pritty print XML: indent the elements" CMPTYPE="1" MTDTYPE="0" EDITORDER="5 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="0" PARPASSTYP="0" TYPTYPE="1" TYPE="ABAP_BOOL" PARVALUE="&apos;X&apos;" PAROPTIONL="X"/>
+  <parameter CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="RV_BYTES_WRITTEN" VERSION="1" LANGU="E" DESCRIPT="Number of bytes written" CMPTYPE="1" MTDTYPE="0" EDITORDER="6 " DISPID="0 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDBY="BCUSER" CHANGEDON="20101030" PARDECLTYP="3" PARPASSTYP="0" TYPTYPE="1" TYPE="I"/>
+  <exception CLSNAME="ZSAPLINK_UTILS" CMPNAME="SAVE_IXML_DOC_TO_FILE" SCONAME="ZCX_SAPLINK" VERSION="1" LANGU="E" MTDTYPE="0" EDITORDER="1 " AUTHOR="BCUSER" CREATEDON="20101030" CHANGEDON="00000000"/>
+  <source>method SAVE_IXML_DOC_TO_FILE.
+  data lo_ixml type ref to if_ixml.
+  data lo_ixml_stream_factory type ref to if_ixml_stream_factory.
+  data lo_output_stream type ref to if_ixml_ostream.
+  data lo_encoding type ref to if_ixml_encoding.
+  data lt_xml type dcxmllines.
+  data lo_renderer type ref to if_ixml_renderer.
+  data lv_rc type i.
+  data lv_size type i.
+
+  if io_ixml_doc is not bound.
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;XML Document not bound&apos;.
+  endif.
+
+  if iv_file_name is initial.
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;No file name specified&apos;.
+  endif.
+
+  lo_ixml = cl_ixml=&gt;create( ).
+
+  lo_encoding = lo_ixml-&gt;create_encoding(
+    character_set = iv_character_set
+    byte_order = iv_byte_order
+  ).
+
+  lo_ixml_stream_factory = lo_ixml-&gt;create_stream_factory( ).
+
+  lo_output_stream = lo_ixml_stream_factory-&gt;create_ostream_itable( lt_xml ).
+
+  lo_output_stream-&gt;set_encoding( encoding = lo_encoding ).
+  lo_output_stream-&gt;set_pretty_print( pretty_print = iv_pretty_print ).
+
+  lo_renderer = lo_ixml-&gt;create_renderer(
+    ostream  = lo_output_stream
+    document = io_ixml_doc
+  ).
+
+  lv_rc = lo_renderer-&gt;render( ).
+
+  lv_size = lo_output_stream-&gt;get_num_written_raw( ).
+
+  lo_output_stream-&gt;close( ).
+
+  if lv_rc &lt;&gt; 0.
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;Renderer failed&apos;
+      subrc = lv_rc.
+  endif.
+
+  call method cl_gui_frontend_services=&gt;gui_download
+    exporting
+      bin_filesize = lv_size
+      filename     = iv_file_name
+      filetype     = &apos;BIN&apos;
+    changing
+      data_tab     = lt_xml
+    exceptions
+      file_write_error          = 1
+      no_batch                  = 2
+      gui_refuse_filetransfer   = 3
+      invalid_type              = 4
+      no_authority              = 5
+      unknown_error             = 6
+      header_not_allowed        = 7
+      separator_not_allowed     = 8
+      filesize_not_allowed      = 9
+      header_too_long           = 10
+      dp_error_create           = 11
+      dp_error_send             = 12
+      dp_error_write            = 13
+      unknown_dp_error          = 14
+      access_denied             = 15
+      dp_out_of_memory          = 16
+      disk_full                 = 17
+      dp_timeout                = 18
+      file_not_found            = 19
+      dataprovider_exception    = 20
+      control_flush_error       = 21
+      not_supported_by_gui      = 22
+      error_no_gui              = 23
+      others                    = 24
+          .
+
+  lv_rc = sy-subrc.
+
+  if lv_rc &lt;&gt; 0.
+    raise exception type zcx_saplink
+    exporting
+      textid = zcx_saplink=&gt;error_message
+      msg = &apos;GUI_DOWNLOAD failed&apos;
+      subrc = lv_rc.
+  endif.
+
+  rv_bytes_written = lv_size.
+endmethod.</source>
+ </method>
+</CLAS>
